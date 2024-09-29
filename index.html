@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dracula">
+<head>
+  <meta charset='utf-8'>
+  <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+  <title>Page Title</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <link href="https://cdn.jsdelivr.net/npm/daisyui@4.12.10/dist/full.min.css" rel="stylesheet" type="text/css" />
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            clifford: '#da373d',
+          }
+        }
+      }
+    }
+  </script>
+
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+</head>
+<body>
+
+<label class="form-control w-24 max-w-xs">
+  <input id="first" type="number" placeholder="Line of Scrimmage" class="input input-bordered w-full max-w-xs" />
+</label>
+<br />
+<label class="form-control w-24 max-w-xs">
+  <input id="second" type="number" placeholder="Tackled on the" class="input input-bordered w-full max-w-xs" />
+</label>
+
+<span id="results">asdf</span>
+
+<script>
+jq2 = jQuery.noConflict();
+
+function calcYardage() {
+  let val1 = jq2('#first').val();
+  let val2 = jq2('#second').val();
+
+  if (jq2.isNumeric(val1) && jq2.isNumeric(val2)) {
+    if (val1 < 0) {
+      val1 = 100 - Math.abs(val1);
+    }
+
+    if (val2 < 0) {
+      val2 = 100 - Math.abs(val2);
+    }
+    console.log('val1: ' + val1 + ' val2: ' + val2);
+
+    let results = parseInt(val1) - parseInt(val2);
+    console.log('Both are numbers ' + results);
+    jq2('#results').text(results);
+  }
+}
+
+jq2(function( $ ) {
+  console.log('jQuery is working');
+
+  calcYardage();
+
+  jq2('#first').keyup(function() {
+    // console.log('First keyup');
+    calcYardage();
+  });
+
+  jq2('#second').keyup(function() {
+    // console.log('Second keyup');
+    calcYardage();
+  });
+});
+</script>
+</body>
+</html>
