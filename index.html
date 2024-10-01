@@ -39,15 +39,15 @@
               <div class="flex flex-wrap justify-center">
                 <div class="w-full lg:w-9/12 px-4">
                   <p class="mb-4 text-lg leading-relaxed text-gray-800">
-                    <label class="form-control w-24 max-w-xs">
-                      <input id="first" type="number" placeholder="Line of Scrimmage" class="input input-bordered w-full max-w-xs" />
+                    <label class="form-control w-48 max-w-xs">
+                      <input id="first" type="number" placeholder="Line of Scrimmage" class="input input-bordered w-full max-w-xs h-40 text-8xl" />
                     </label>
                     <br />
-                    <label class="form-control w-24 max-w-xs">
-                      <input id="second" type="number" placeholder="Tackled on the" class="input input-bordered w-full max-w-xs" />
+                    <label class="form-control w-48 max-w-xs">
+                      <input id="second" type="number" placeholder="Tackled on the" class="input input-bordered w-full max-w-xs h-40 text-8xl" />
                     </label>
 
-                    <span id="results"></span>
+                    <span id="results" class="w-full max-w-xs h-40 text-8xl"></span>
                   </p>
                 </div>
               </div>
@@ -61,11 +61,7 @@
 <script>
 jq2 = jQuery.noConflict();
 
-function foo() {
-  // -49 50 = 1
-  // -49 49 = 2
-  // -40 40 = 20
-  // -40 -30 = -10
+function calcYardage() {
 
   let val1 = jq2('#first').val();
   let val2 = jq2('#second').val();
@@ -78,27 +74,43 @@ function foo() {
     if (val2 < 0) {
       val2 = 100 - Math.abs(val2);
     }
-    console.log('val1: ' + val1 + ' val2: ' + val2);
 
     let results = parseInt(val1) - parseInt(val2);
-    console.log('Both are numbers ' + results);
     jq2('#results').text(results);
   }
 }
 
 jq2(function( $ ) {
-  console.log('jQuery is working');
+  calcYardage();
 
-  foo();
+  var timeout = undefined;
+
+  jq2('#first').trigger('focus');
 
   jq2('#first').keyup(function() {
     // console.log('First keyup');
-    foo();
+    calcYardage();
+
+    clearTimeout(timeout);
   });
 
-  jq2('#second').keyup(function() {
+  jq2('#second').keyup(function(e) {
+
+    // Return if tab key is entered
+    if (e.keyCode == 9) { console.log('skipping because it is the tab key'); return; }
+
     // console.log('Second keyup');
-    foo();
+    calcYardage();
+
+    console.log('Setting the timeout');
+    clearTimeout(timeout);
+    timeout = setTimeout(() =>{
+      console.log('hit it');
+      jq2('#first').val(parseInt(jq2('#second').val()));
+      jq2('#second').val('');
+      jq2('#results').val('');
+      // jq2('#first').trigger('focus');
+    }, 10000);
   });
 });
 </script>
