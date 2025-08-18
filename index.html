@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+
+  <title>Football Play Tracker</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://cdn.jsdelivr.net/npm/daisyui@4.12.10/dist/full.min.css" rel="stylesheet" type="text/css" />
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            clifford: '#da373d',
+          }
+        }
+      }
+    }
+  </script>
+
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+</head>
+<body class="bg-gradient-to-br from-blue-900 to-gray-800 min-h-screen p-4">
+    <div class="w-full max-w-md mx-auto bg-gray-900 text-white rounded-xl shadow-2xl p-6 mt-4">
+        <h1 class="text-2xl font-bold text-center mb-4 text-blue-300">Football Play Tracker</h1>
+        <div class="space-y-4">
+            <div>
+                <label for="lineOfScrimmage" class="block text-sm font-semibold text-blue-200">Line of Scrimmage</label>
+                <input
+                    type="text"
+                    id="lineOfScrimmage"
+                    placeholder="Enter yard line (e.g., 20)"
+                    class="input input-bordered w-full bg-gray-800 text-white border-blue-500 focus:ring-2 focus:ring-blue-400"
+                />
+            </div>
+            <div>
+                <label for="downOn" class="block text-sm font-semibold text-blue-200">Down On</label>
+                <input
+                    type="text"
+                    id="downOn"
+                    placeholder="Enter down (e.g., 1st, 2nd)"
+                    class="input input-bordered w-full bg-gray-800 text-white border-blue-500 focus:ring-2 focus:ring-blue-400"
+                />
+            </div>
+            <div>
+                <span id="results" class="block text-sm font-medium text-blue-100 mt-4 p-4 bg-gray-800 rounded-lg"></span>
+            </div>
+        </div>
+    </div>
+
+<script>
+jq2 = jQuery.noConflict();
+
+function calcYardage() {
+
+  let val1 = jq2('#lineOfScrimmage').val();
+  let val2 = jq2('#downOn').val();
+
+  if (jq2.isNumeric(val1) && jq2.isNumeric(val2)) {
+    if (val1 < 0) {
+      val1 = 100 - Math.abs(val1);
+    }
+
+    if (val2 < 0) {
+      val2 = 100 - Math.abs(val2);
+    }
+
+    let results = parseInt(val1) - parseInt(val2);
+    jq2('#results').text(results);
+  }
+}
+
+jq2(function( $ ) {
+  calcYardage();
+
+  var timeout = undefined;
+
+  jq2('#lineOfScrimmage').trigger('focus');
+
+  jq2('#lineOfScrimmage').keyup(function() {
+    // console.log('First keyup');
+    calcYardage();
+
+    clearTimeout(timeout);
+  });
+
+  jq2('#downOn').keyup(function(e) {
+
+    // Return if tab key is entered
+    if (e.keyCode == 9) { console.log('skipping because it is the tab key'); return; }
+
+    // console.log('Second keyup');
+    calcYardage();
+
+    // console.log('Setting the timeout');
+    clearTimeout(timeout);
+    timeout = setTimeout(() =>{
+      console.log('hit it');
+      jq2('#lineOfScrimmage').val(parseInt(jq2('#downOn').val()));
+      jq2('#downOn').val('');
+      jq2('#results').val('');
+      // jq2('#first').trigger('focus');
+    }, 5000);
+  });
+});
+</script>
+</body>
+</html>
